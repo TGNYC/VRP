@@ -1,0 +1,640 @@
+﻿Vehicle Routing Problem (CS2)
+
+
+Assume that there were just 5 people on your block that had a morning newspaper delivered to their home.  If you were the delivery person, it would be irrelevant, as far as time efficiency, what order in which you delivered the newspapers.  A difference of a few minutes really doesn't matter.  Now, assume that you add several more customers and they reside several blocks from one another.  Now you probably need to put more thought into the order in which you make your deliveries.  
+
+
+You can draw out each possible path, BRUTE FORCE, and then select the most optimal solution.  
+
+
+A few weeks later, you add several hundred customers and they reside, not only in your town, but in neighboring towns.  Working out a solution where you draw out, manually, each possible route would no longer be practical.  You would need to derive a more effective method for building your route.
+
+
+This problem, commonly called the Traveling Salesman Problem, is one that has drawn a lot of attention and resulted in many algorithms.  
+
+
+This is where we start to discuss the parameters of your project.  In this problem, you will work with the Vehicle Routing Problem which generalizes the more known Travelling Salesman Problem. 
+
+
+For this project, you will provide a cost effective solution for your delivery company, the International Parcel Service (IPS).  IPS services the greater Homerville area.
+
+
+For the dimensions of theTownship of Homerville we need to make the following assumptions:
+
+
+There are 5,000 feet in a mile
+
+
+The distance of the actual street separating the homes on a given block are infinitely small.  This means that we will discount the fact that there is a street with a given distance is ignored so a width of 0 feet is assumed.
+
+
+All homes are 100 feet wide by 100 feet deep, 10,000 square feet
+
+
+There are 10 homes on each side of a block, therefore each block is 
+1,000 feet long (⅕  of a mile).  Each block contains 20 homes.
+
+
+Homerville is a region covering 10 square miles (100,000 feet by 100,000 feet).
+
+
+There are 250 Streets (EAST to WEST) that are 200 feet apart (sum of 2 homes).
+
+
+There are 50 Avenues (NORTH and SOUTH) that are 1,000 feet apart.
+
+
+Therefore, each Street contains 1,000 homes.  SInce there are 250 Streets, there is the potential of 250,000 homes.  
+
+
+However, the Bart Complex covers a 200 by 1,000 foot block and contains 300 units.  This complex is located between 2nd Street and 3rd Street and 3rd and 4th Avenues.  
+
+
+Also, the Lisa Complex covers a 200 by 1,000 foot block and contains 500 units.  This complex is located between 149th  Street and 150th Street and 33rd and 34th Avenues.  
+
+
+Therefore, the homes that would have been on these blocks don’t exist, so the total homes is actually 249,960.
+
+
+Homerville is laid out in a grid style where the streets running North and South are named in numbers starting with 1st Street.   The streets running perpendicular, East and West, are also named in numbers starting with 1st Avenue.  Also there are two major apartment complexes in Homerville.  The Bart Complex is between 2nd Street and 3rd Street and 3rd Avenue and 4th Avenue.  This complex contains 300 units.  The second complex is The Lisa Complex and  is between 149th Street and 150th Street and 33rd Avenue and 34th Avenue.  This complex contains 500 units.  The streets and avenues are evenly distributed and you can assume street width that is virtually ZERO feet wide.    There are 10 homes per side of the block for a total of 20 homes.   
+
+
+The houses are numbered A,B,C,D,E,F,G,H,I & J for the west side of the street and AA,BB,CC,DD,EE,FF,HH,II & JJ for the east side of the street.
+The DISTRIBUTION Center, where ALL of the packages and trucks reside, covers a full block between 125th Street and 126th Street and 22nd Avenue and 23rd Avenue.  This also reduces the total number of homes by 20, making the total homes 249,940.
+
+
+Your company has options for distributing packages to customers of Homerville.
+
+
+Purchase a Delivery Truck at a Cost of  $100,000
+Rental of a Delivery Truck Cost $15,000 per day for a 10 day cycle.
+There is a fuel charge of $5.00 per mile for any truck.
+Owned Trucks need to be maintained every 100 miles at a cost of $1,000
+
+
+Each Employee cost $30 per hour for an 8 hour period and then $45 for each additional hour.
+
+
+A Truck can hold an infinite amount of packages.  
+
+
+As for delivery time, a truck takes 30 seconds to travel 1 block and it takes 1 minute to deliver EACH package (1 package per house/unit).  HOWEVER, YOU MAY decide to traverse PART WAY up a street.  IN THAT CASE, you take 3 seconds PER HOUSE UP the street AND THEN 3 seconds PER HOUSE BACK down the street.
+
+
+Deliveries to the Bart or Lisa complex include the time to drive to the complex, plus 30 seconds for each package to be delivered at that complex.  If there are more than 100 units, additional trips are required.
+
+
+The simulation will run for 10  cycles (10 working days).  The amount and location of deliveries will vary each cycle (day).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Your program must be able to read in a cycle of information from a comma delimited flat file in the following format:
+
+
+Cycle Number
+Total Packages
+Home Address
+Bart Complex
+Bart Complex units
+Lisa Complex
+Lisa Complex units
+
+
+Example:
+cycle1.dat
+1
+2,350
+1
+4560
+1s,31a,AA
+1s,48a,HH
+1s,40a,J
+1s,1a,AA
+1s,3a,C
+1s,2a,BB
+1s,6a,FF
+1s,28a,H
+1s,46a,F
+1s,15a,EE
+1s,46a,F
+1s,5a,EE
+1s,7a,GG
+1s,2a,BB
+1s,29a,II
+1s,39a,II
+1s,1a,A
+1s,2a,B
+1s,48a,H
+2s,10a,JJ
+2s,27a,GG
+2s,40a,J
+2s,13a,C
+2s,43a,C
+2s,29a,II
+2s,22a,B
+2s,1a,A
+2s,5a,E
+2s,12a,BB
+2s,24a,D
+2s,1a,AA
+2s,39a,II
+2s,12a,BB
+2s,19a,II
+2s,42a,B
+2s,25a,E
+2s,36a,FF
+2s,13a,C
+2s,11a,AA
+2s,28a,HH
+2s,40a,J
+3s,8a,H
+3s,29a,II
+3s,42a,B
+3s,28a,H
+3s,28a,HH
+3s,37a,G
+3s,35a,EE
+3s,29a,I
+3s,34a,D
+3s,49a,II
+3s,34a,DD
+3s,30a,JJ
+4s,43a,C
+4s,15a,E
+4s,6a,F
+4s,42a,B
+4s,48a,HH
+4s,3a,CC
+4s,7a,G
+4s,16a,F
+4s,35a,EE
+Bart Complex
+190
+Lisa Complex
+121
+
+
+The stats for the last 10 day cycle are as follows:
+
+
+1.        4,560 packages
+2.        3,980 packages
+3.        2,890 packages
+4.        1,990 packages
+5.        2,100 packages
+6.        5,100 packages
+7.        4,010 packages
+8.        3,001 packages
+9.        2,000 packages
+10.     1,950 packages
+
+
+
+
+J
+	JJ
+	J
+	JJ
+	
+
+	
+
+	
+
+	
+
+	
+
+	I
+	II
+	I
+	II
+	
+
+	
+
+	
+
+	
+
+	
+
+	H
+	HH
+	H
+	HH
+	
+
+	
+
+	
+
+	
+
+	
+
+	G
+	GG
+	G
+	GG
+	
+
+	
+
+	
+
+	
+
+	
+
+	F
+	FF
+	F
+	FF
+	
+
+	
+
+	
+
+	
+
+	
+
+	E
+	EE
+	E
+	EE
+	
+
+	
+
+	
+
+	
+
+	
+
+	D
+	DD
+	D
+	DD
+	
+
+	
+
+	
+
+	
+
+	
+
+	C
+	CC
+	C
+	CC
+	
+
+	
+
+	
+
+	
+
+	
+
+	B
+	BB
+	B
+	BB
+	
+
+	
+
+	
+
+	
+
+	
+
+	A
+	AA
+	A
+	AA
+	
+
+	
+
+	
+
+	
+
+	
+
+	J
+	JJ
+	J
+	JJ
+	
+
+	
+
+	
+
+	
+
+	
+
+	I
+	II
+	I
+	II
+	
+
+	
+
+	
+
+	
+
+	
+
+	H
+	HH
+	H
+	HH
+	
+
+	
+
+	
+
+	
+
+	
+
+	G
+	GG
+	G
+	GG
+	
+
+	
+
+	
+
+	
+
+	
+
+	F
+	FF
+	F
+	FF
+	
+
+	
+
+	
+
+	
+
+	
+
+	E
+	EE
+	E
+	EE
+	
+
+	
+
+	
+
+	
+
+	
+
+	D
+	DD
+	D
+	DD
+	
+
+	
+
+	
+
+	
+
+	
+
+	C
+	CC
+	C
+	CC
+	
+
+	
+
+	
+
+	
+
+	
+
+	B
+	BB
+	B
+	BB
+	
+
+	
+
+	
+
+	
+
+	
+
+	A
+	AA
+	A
+	AA
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+
+
+Your team's objective is to implement a delivery algorithm that minimizes total delivery time and Cycle cost.
+
+
+Decisions need to be made with regard to the number of employees and trucks you utilize.  Also, decide if you will purchase, rent trucks or a combination.
+
+
+You MUST have one employee per Truck.  If you decide to use two employees per truck, your delivery time per house will be reduced to 30 seconds, but your hourly employee costs go up.
+
+
+After each cycle run, you need to display, in a file, the following information:
+
+
+Truck cost  (rental and purchase)
+Total Gas Cost
+Employee Cost (rate times hours worked)
+TOTAL packages delivered
+TOTAL delivery time (sum of all trucks delivery times)
+
+
+Overall TOTAL Cycle Cost
+
+
+For example:
+
+
+Purchased Truck:  100,000 (only counts once, this cost moves to 0 for 
+3 Rental Trucks        45,000                                  the remaining 9 cycles)
+Gas Cost                         150
+Employee Cost  (4)        570
+Packages Delivered    4,560    
+Total Delivery Time     19 hours
+
+
+Total Cycle Cost        145,728
+
+
+
+
+After all 10 cycles are run through your program, we will total the cost for all cycles.   
+
+
+You need to identify a team captain.  The captain is responsible for maintaining a daily journal that details the actions, meetings and decisions of your team.  
+
+
+Your team will meet with Mr. Farrell once a week to review your progress and evaluate your journal.
+
+
+Your project grade is a function of the effectiveness of your team’s efforts, your weekly meetings, the quality and depth of your journal as well as your standing, as compared to the other teams, as a result of your 10 cycle runs. Your Graphic representation, proof, of the complete route being run
